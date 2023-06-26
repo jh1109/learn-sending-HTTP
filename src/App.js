@@ -6,31 +6,25 @@ import "./App.css";
 function App() {
   const [movies, setMovies] = useState([]);
 
-  function fetchMoviesHandler() {
+  // async 함수는 반드시 프라미스를 반환한다.
+  async function fetchMoviesHandler() {
     // fetch(url, [options])
     // options에 아무것도 넘기지 않으면 기본 GET 메서드로 진행됨
     // fetch()를 호출하면 네트워크 요청을 보내고 promise가 반환됨
-    fetch("https://swapi.dev/api/films/")
-      .then((response) => {
-        console.log(response);
-        return response.json();
-        // response의 내장 method: json(). promise를 반환함
-        // JSON response 본문을 자바스크립트 형태의 데이터로 바꿔주는 함수
-      })
-      .then((data) => {
-        console.log(data.results);
-        // 원하는 값만 가져오기
-        const transformedMovies = data.results.map((movieData) => {
-          return {
-            id: movieData.episode_id,
-            title: movieData.title,
-            openingText: movieData.opening_crawl,
-            releaseDate: movieData.release_date,
-          };
-        });
-        console.log(transformedMovies);
-        setMovies(transformedMovies);
-      });
+
+    // await를 만나면 프라미스를 처리할 때 까지 기다림
+    // await는 promise.then의 기능을 함
+    const response = await fetch("https://swapi.dev/api/films/");
+    const data = await response.json();
+    const transformedMovies = data.results.map((movieData) => {
+      return {
+        id: movieData.episode_id,
+        title: movieData.title,
+        openingText: movieData.opening_crawl,
+        releaseDate: movieData.release_date,
+      };
+    });
+    setMovies(transformedMovies);
   }
 
   return (
