@@ -5,9 +5,12 @@ import "./App.css";
 
 function App() {
   const [movies, setMovies] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   // async 함수는 반드시 프라미스를 반환한다.
   async function fetchMoviesHandler() {
+    setIsLoading(true);
+
     // fetch(url, [options])
     // options에 아무것도 넘기지 않으면 기본 GET 메서드로 진행됨
     // fetch()를 호출하면 네트워크 요청을 보내고 promise가 반환됨
@@ -25,6 +28,7 @@ function App() {
       };
     });
     setMovies(transformedMovies);
+    setIsLoading(false);
   }
 
   return (
@@ -33,7 +37,9 @@ function App() {
         <button onClick={fetchMoviesHandler}>Fetch Movies</button>
       </section>
       <section>
-        <MoviesList movies={movies} />
+        {!isLoading && movies.length > 0 && <MoviesList movies={movies} />}
+        {!isLoading && movies.length === 0 && <p>Found no movies.</p>}
+        {isLoading && <p>Loading...</p>}
       </section>
     </React.Fragment>
   );
