@@ -13,7 +13,7 @@ function App() {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await fetch('https://swapi.dev/api/films/');
+      const response = await fetch('https://learn-sending-http-b6714-default-rtdb.firebaseio.com/movies.json');
       if (!response.ok) {
         throw new Error('Something went wrong!');
       }
@@ -39,8 +39,19 @@ function App() {
     fetchMoviesHandler();
   }, [fetchMoviesHandler]);
 
-  function addMovieHandler(movie) {
-    console.log(movie);
+  async function addMovieHandler(movie) {
+    // 데이터 보내기
+    const response = await fetch('https://learn-sending-http-b6714-default-rtdb.firebaseio.com/movies.json', {
+      method: 'POST',
+      // body는 JSON 데이터! JSON.stringify로 JSON 형식으로 바꿔줌
+      body: JSON.stringify(movie),
+      // headers를 통해 어떤 컨텐츠가 전달되는지 알 수 있음
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    const data = await response.json();
+    console.log(data)
   }
 
   let content = <p>Found no movies.</p>;
