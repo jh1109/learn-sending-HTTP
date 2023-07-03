@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import MoviesList from "./components/MoviesList";
 import "./App.css";
@@ -9,7 +9,7 @@ function App() {
   const [error, setError] = useState(null);
 
   // async 함수는 반드시 프라미스를 반환한다.
-  async function fetchMoviesHandler() {
+  const fetchMoviesHandler = useCallback(async () => {
     setIsLoading(true);
 
     // 다른 곳에서 발생할 수도 있는 error 상태 초기화
@@ -47,7 +47,12 @@ function App() {
       setError(error.message);
     }
     setIsLoading(false);
-  }
+  }, []);
+
+  useEffect(() => {
+    fetchMoviesHandler();
+    console.log('useEffect');
+  }, [fetchMoviesHandler]);
 
   let content = <p>Found no movies.</p>;
 
